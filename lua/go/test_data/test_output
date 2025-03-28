@@ -1,0 +1,97 @@
+{"Time":"2025-03-26T18:52:51.774337+01:00","Action":"start","Package":"harmony"}
+{"Time":"2025-03-26T18:52:51.774389+01:00","Action":"output","Package":"harmony","Output":"?   \tharmony\t[no test files]\n"}
+{"Time":"2025-03-26T18:52:51.774394+01:00","Action":"skip","Package":"harmony","Elapsed":0}
+{"Time":"2025-03-26T18:52:51.90167+01:00","Action":"start","Package":"harmony/cmd/server"}
+{"Time":"2025-03-26T18:52:51.901695+01:00","Action":"output","Package":"harmony/cmd/server","Output":"?   \tharmony/cmd/server\t[no test files]\n"}
+{"Time":"2025-03-26T18:52:51.901711+01:00","Action":"skip","Package":"harmony/cmd/server","Elapsed":0}
+{"Time":"2025-03-26T18:52:52.424865+01:00","Action":"start","Package":"harmony/internal/features/auth"}
+{"Time":"2025-03-26T18:52:52.663595+01:00","Action":"run","Package":"harmony/internal/features/auth","Test":"TestRegister"}
+{"Time":"2025-03-26T18:52:52.663656+01:00","Action":"output","Package":"harmony/internal/features/auth","Test":"TestRegister","Output":"=== RUN   TestRegister\n"}
+{"Time":"2025-03-26T18:52:52.664+01:00","Action":"run","Package":"harmony/internal/features/auth","Test":"TestRegister/TestValidLogin"}
+{"Time":"2025-03-26T18:52:52.664004+01:00","Action":"output","Package":"harmony/internal/features/auth","Test":"TestRegister/TestValidLogin","Output":"=== RUN   TestRegister/TestValidLogin\n"}
+{"Time":"2025-03-26T18:52:52.664273+01:00","Action":"output","Package":"harmony/internal/features/auth","Test":"TestRegister/TestValidLogin","Output":"    registrator_test.go:54: Foobar\n"}
+{"Time":"2025-03-26T18:52:52.664365+01:00","Action":"output","Package":"harmony/internal/features/auth","Test":"TestRegister","Output":"--- FAIL: TestRegister (0.00s)\n"}
+{"Time":"2025-03-26T18:52:52.664369+01:00","Action":"output","Package":"harmony/internal/features/auth","Test":"TestRegister/TestValidLogin","Output":"    --- FAIL: TestRegister/TestValidLogin (0.00s)\n"}
+{"Time":"2025-03-26T18:52:52.664379+01:00","Action":"fail","Package":"harmony/internal/features/auth","Test":"TestRegister/TestValidLogin","Elapsed":0}
+{"Time":"2025-03-26T18:52:52.664387+01:00","Action":"fail","Package":"harmony/internal/features/auth","Test":"TestRegister","Elapsed":0}
+{"Time":"2025-03-26T18:52:52.664388+01:00","Action":"output","Package":"harmony/internal/features/auth","Output":"FAIL\n"}
+{"Time":"2025-03-26T18:52:52.664754+01:00","Action":"output","Package":"harmony/internal/features/auth","Output":"FAIL\tharmony/internal/features/auth\t0.240s\n"}
+{"Time":"2025-03-26T18:52:52.664778+01:00","Action":"fail","Package":"harmony/internal/features/auth","Elapsed":0.24}
+{"Time":"2025-03-26T18:52:53.3083+01:00","Action":"start","Package":"harmony/internal/features/auth/authrouter"}
+{"Time":"2025-03-26T18:52:53.308359+01:00","Action":"start","Package":"harmony/internal/features/auth/authrouter/views"}
+{"Time":"2025-03-26T18:52:53.308386+01:00","Action":"output","Package":"harmony/internal/features/auth/authrouter/views","Output":"?   \tharmony/internal/features/auth/authrouter/views\t[no test files]\n"}
+{"Time":"2025-03-26T18:52:53.308392+01:00","Action":"skip","Package":"harmony/internal/features/auth/authrouter/views","Elapsed":0}
+{"Time":"2025-03-26T18:52:53.308404+01:00","Action":"start","Package":"harmony/internal/project"}
+{"Time":"2025-03-26T18:52:53.308408+01:00","Action":"output","Package":"harmony/internal/project","Output":"?   \tharmony/internal/project\t[no test files]\n"}
+{"Time":"2025-03-26T18:52:53.30841+01:00","Action":"skip","Package":"harmony/internal/project","Elapsed":0}
+{"Time":"2025-03-26T18:52:53.471743+01:00","Action":"start","Package":"harmony/internal/server"}
+{"Time":"2025-03-26T18:52:53.471858+01:00","Action":"start","Package":"harmony/internal/server/ioc"}
+{"Time":"2025-03-26T18:52:53.471895+01:00","Action":"output","Package":"harmony/internal/server/ioc","Output":"?   \tharmony/internal/server/ioc\t[no test files]\n"}
+{"Time":"2025-03-26T18:52:53.471903+01:00","Action":"skip","Package":"harmony/internal/server/ioc","Elapsed":0}
+{"Time":"2025-03-26T18:52:53.471914+01:00","Action":"start","Package":"harmony/internal/server/testing"}
+{"Time":"2025-03-26T18:52:53.471921+01:00","Action":"output","Package":"harmony/internal/server/testing","Output":"?   \tharmony/internal/server/testing\t[no test files]\n"}
+{"Time":"2025-03-26T18:52:53.471924+01:00","Action":"skip","Package":"harmony/internal/server/testing","Elapsed":0}
+{"Time":"2025-03-26T18:52:53.471997+01:00","Action":"start","Package":"harmony/internal/server/views"}
+{"Time":"2025-03-26T18:52:53.472335+01:00","Action":"output","Package":"harmony/internal/server/views","Output":"?   \tharmony/internal/server/views\t[no test files]\n"}
+{"Time":"2025-03-26T18:52:53.472356+01:00","Action":"skip","Package":"harmony/internal/server/views","Elapsed":0}
+{"Time":"2025-03-26T18:52:53.472505+01:00","Action":"start","Package":"harmony/internal/testing/aria-role"}
+{"Time":"2025-03-26T18:52:53.47255+01:00","Action":"output","Package":"harmony/internal/testing/aria-role","Output":"?   \tharmony/internal/testing/aria-role\t[no test files]\n"}
+{"Time":"2025-03-26T18:52:53.472561+01:00","Action":"skip","Package":"harmony/internal/testing/aria-role","Elapsed":0}
+{"Time":"2025-03-26T18:52:53.472589+01:00","Action":"start","Package":"harmony/internal/testing/htest"}
+{"Time":"2025-03-26T18:52:53.472614+01:00","Action":"output","Package":"harmony/internal/testing/htest","Output":"?   \tharmony/internal/testing/htest\t[no test files]\n"}
+{"Time":"2025-03-26T18:52:53.472617+01:00","Action":"skip","Package":"harmony/internal/testing/htest","Elapsed":0}
+{"Time":"2025-03-26T18:52:53.47265+01:00","Action":"start","Package":"harmony/internal/testing/mocks/features/auth/authrouter_mock"}
+{"Time":"2025-03-26T18:52:53.472658+01:00","Action":"output","Package":"harmony/internal/testing/mocks/features/auth/authrouter_mock","Output":"?   \tharmony/internal/testing/mocks/features/auth/authrouter_mock\t[no test files]\n"}
+{"Time":"2025-03-26T18:52:53.472664+01:00","Action":"skip","Package":"harmony/internal/testing/mocks/features/auth/authrouter_mock","Elapsed":0}
+{"Time":"2025-03-26T18:52:53.472671+01:00","Action":"start","Package":"harmony/internal/testing/mocks/features/auth_mock"}
+{"Time":"2025-03-26T18:52:53.47268+01:00","Action":"output","Package":"harmony/internal/testing/mocks/features/auth_mock","Output":"?   \tharmony/internal/testing/mocks/features/auth_mock\t[no test files]\n"}
+{"Time":"2025-03-26T18:52:53.472686+01:00","Action":"skip","Package":"harmony/internal/testing/mocks/features/auth_mock","Elapsed":0}
+{"Time":"2025-03-26T18:52:53.472695+01:00","Action":"start","Package":"harmony/internal/testing/servertest"}
+{"Time":"2025-03-26T18:52:53.472703+01:00","Action":"output","Package":"harmony/internal/testing/servertest","Output":"?   \tharmony/internal/testing/servertest\t[no test files]\n"}
+{"Time":"2025-03-26T18:52:53.473142+01:00","Action":"start","Package":"harmony/internal/testing/shaman"}
+{"Time":"2025-03-26T18:52:53.473152+01:00","Action":"output","Package":"harmony/internal/testing/shaman","Output":"?   \tharmony/internal/testing/shaman\t[no test files]\n"}
+{"Time":"2025-03-26T18:52:53.473155+01:00","Action":"skip","Package":"harmony/internal/testing/shaman","Elapsed":0}
+{"Time":"2025-03-26T18:52:53.473167+01:00","Action":"start","Package":"harmony/internal/testing/shaman/predicates"}
+{"Time":"2025-03-26T18:52:53.473169+01:00","Action":"output","Package":"harmony/internal/testing/shaman/predicates","Output":"?   \tharmony/internal/testing/shaman/predicates\t[no test files]\n"}
+{"Time":"2025-03-26T18:52:53.473171+01:00","Action":"skip","Package":"harmony/internal/testing/shaman/predicates","Elapsed":0}
+{"Time":"2025-03-26T18:52:53.473095+01:00","Action":"skip","Package":"harmony/internal/testing/servertest","Elapsed":0}
+{"Time":"2025-03-26T18:52:53.92458+01:00","Action":"run","Package":"harmony/internal/features/auth/authrouter","Test":"TestLoginPage"}
+{"Time":"2025-03-26T18:52:53.924648+01:00","Action":"output","Package":"harmony/internal/features/auth/authrouter","Test":"TestLoginPage","Output":"=== RUN   TestLoginPage\n"}
+{"Time":"2025-03-26T18:52:53.92512+01:00","Action":"run","Package":"harmony/internal/features/auth/authrouter","Test":"TestLoginPage/TestInvalidCredentials"}
+{"Time":"2025-03-26T18:52:53.925129+01:00","Action":"output","Package":"harmony/internal/features/auth/authrouter","Test":"TestLoginPage/TestInvalidCredentials","Output":"=== RUN   TestLoginPage/TestInvalidCredentials\n"}
+{"Time":"2025-03-26T18:52:53.96503+01:00","Action":"run","Package":"harmony/internal/features/auth/authrouter","Test":"TestLoginPage/TestMissingPassword"}
+{"Time":"2025-03-26T18:52:53.965044+01:00","Action":"output","Package":"harmony/internal/features/auth/authrouter","Test":"TestLoginPage/TestMissingPassword","Output":"=== RUN   TestLoginPage/TestMissingPassword\n"}
+{"Time":"2025-03-26T18:52:53.989129+01:00","Action":"run","Package":"harmony/internal/features/auth/authrouter","Test":"TestLoginPage/TestMissingUsername"}
+{"Time":"2025-03-26T18:52:53.98914+01:00","Action":"output","Package":"harmony/internal/features/auth/authrouter","Test":"TestLoginPage/TestMissingUsername","Output":"=== RUN   TestLoginPage/TestMissingUsername\n"}
+{"Time":"2025-03-26T18:52:54.012695+01:00","Action":"run","Package":"harmony/internal/features/auth/authrouter","Test":"TestLoginPage/TestUnexpectedError"}
+{"Time":"2025-03-26T18:52:54.01271+01:00","Action":"output","Package":"harmony/internal/features/auth/authrouter","Test":"TestLoginPage/TestUnexpectedError","Output":"=== RUN   TestLoginPage/TestUnexpectedError\n"}
+{"Time":"2025-03-26T18:52:54.036098+01:00","Action":"run","Package":"harmony/internal/features/auth/authrouter","Test":"TestLoginPage/TestValidCredentialsRedirects"}
+{"Time":"2025-03-26T18:52:54.036111+01:00","Action":"output","Package":"harmony/internal/features/auth/authrouter","Test":"TestLoginPage/TestValidCredentialsRedirects","Output":"=== RUN   TestLoginPage/TestValidCredentialsRedirects\n"}
+{"Time":"2025-03-26T18:52:54.059715+01:00","Action":"output","Package":"harmony/internal/features/auth/authrouter","Test":"TestLoginPage","Output":"--- PASS: TestLoginPage (0.14s)\n"}
+{"Time":"2025-03-26T18:52:54.059733+01:00","Action":"output","Package":"harmony/internal/features/auth/authrouter","Test":"TestLoginPage/TestInvalidCredentials","Output":"    --- PASS: TestLoginPage/TestInvalidCredentials (0.04s)\n"}
+{"Time":"2025-03-26T18:52:54.059736+01:00","Action":"pass","Package":"harmony/internal/features/auth/authrouter","Test":"TestLoginPage/TestInvalidCredentials","Elapsed":0.04}
+{"Time":"2025-03-26T18:52:54.059739+01:00","Action":"output","Package":"harmony/internal/features/auth/authrouter","Test":"TestLoginPage/TestMissingPassword","Output":"    --- PASS: TestLoginPage/TestMissingPassword (0.02s)\n"}
+{"Time":"2025-03-26T18:52:54.059741+01:00","Action":"pass","Package":"harmony/internal/features/auth/authrouter","Test":"TestLoginPage/TestMissingPassword","Elapsed":0.02}
+{"Time":"2025-03-26T18:52:54.059743+01:00","Action":"output","Package":"harmony/internal/features/auth/authrouter","Test":"TestLoginPage/TestMissingUsername","Output":"    --- PASS: TestLoginPage/TestMissingUsername (0.02s)\n"}
+{"Time":"2025-03-26T18:52:54.059763+01:00","Action":"pass","Package":"harmony/internal/features/auth/authrouter","Test":"TestLoginPage/TestMissingUsername","Elapsed":0.02}
+{"Time":"2025-03-26T18:52:54.059766+01:00","Action":"output","Package":"harmony/internal/features/auth/authrouter","Test":"TestLoginPage/TestUnexpectedError","Output":"    --- PASS: TestLoginPage/TestUnexpectedError (0.02s)\n"}
+{"Time":"2025-03-26T18:52:54.059768+01:00","Action":"pass","Package":"harmony/internal/features/auth/authrouter","Test":"TestLoginPage/TestUnexpectedError","Elapsed":0.02}
+{"Time":"2025-03-26T18:52:54.059769+01:00","Action":"output","Package":"harmony/internal/features/auth/authrouter","Test":"TestLoginPage/TestValidCredentialsRedirects","Output":"    --- PASS: TestLoginPage/TestValidCredentialsRedirects (0.02s)\n"}
+{"Time":"2025-03-26T18:52:54.05982+01:00","Action":"pass","Package":"harmony/internal/features/auth/authrouter","Test":"TestLoginPage/TestValidCredentialsRedirects","Elapsed":0.02}
+{"Time":"2025-03-26T18:52:54.059836+01:00","Action":"pass","Package":"harmony/internal/features/auth/authrouter","Test":"TestLoginPage","Elapsed":0.14}
+{"Time":"2025-03-26T18:52:54.05984+01:00","Action":"output","Package":"harmony/internal/features/auth/authrouter","Output":"PASS\n"}
+{"Time":"2025-03-26T18:52:54.061591+01:00","Action":"output","Package":"harmony/internal/features/auth/authrouter","Output":"ok  \tharmony/internal/features/auth/authrouter\t0.753s\n"}
+{"Time":"2025-03-26T18:52:54.063471+01:00","Action":"pass","Package":"harmony/internal/features/auth/authrouter","Elapsed":0.755}
+{"Time":"2025-03-26T18:52:54.473249+01:00","Action":"run","Package":"harmony/internal/server","Test":"TestNavigateToLogin"}
+{"Time":"2025-03-26T18:52:54.473291+01:00","Action":"output","Package":"harmony/internal/server","Test":"TestNavigateToLogin","Output":"=== RUN   TestNavigateToLogin\n"}
+{"Time":"2025-03-26T18:52:54.473993+01:00","Action":"run","Package":"harmony/internal/server","Test":"TestNavigateToLogin/TestLoginFlow"}
+{"Time":"2025-03-26T18:52:54.474+01:00","Action":"output","Package":"harmony/internal/server","Test":"TestNavigateToLogin/TestLoginFlow","Output":"=== RUN   TestNavigateToLogin/TestLoginFlow\n"}
+{"Time":"2025-03-26T18:52:54.523077+01:00","Action":"output","Package":"harmony/internal/server","Test":"TestNavigateToLogin","Output":"--- PASS: TestNavigateToLogin (0.05s)\n"}
+{"Time":"2025-03-26T18:52:54.523092+01:00","Action":"output","Package":"harmony/internal/server","Test":"TestNavigateToLogin/TestLoginFlow","Output":"    --- PASS: TestNavigateToLogin/TestLoginFlow (0.05s)\n"}
+{"Time":"2025-03-26T18:52:54.5231+01:00","Action":"pass","Package":"harmony/internal/server","Test":"TestNavigateToLogin/TestLoginFlow","Elapsed":0.05}
+{"Time":"2025-03-26T18:52:54.523108+01:00","Action":"pass","Package":"harmony/internal/server","Test":"TestNavigateToLogin","Elapsed":0.05}
+{"Time":"2025-03-26T18:52:54.52311+01:00","Action":"output","Package":"harmony/internal/server","Output":"PASS\n"}
+{"Time":"2025-03-26T18:52:54.524458+01:00","Action":"output","Package":"harmony/internal/server","Output":"ok  \tharmony/internal/server\t1.053s\n"}
+{"Time":"2025-03-26T18:52:54.525811+01:00","Action":"pass","Package":"harmony/internal/server","Elapsed":1.054}
+
+
