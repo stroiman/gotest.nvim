@@ -1,4 +1,4 @@
-print("Loaded gotest")
+require("gotest.autorunner")
 
 local M = {
   dirs = {},
@@ -150,15 +150,5 @@ vim.api.nvim_create_autocmd({ "BufReadPre" }, {
 })
 
 vim.cmd([[messages clear]])
-
-vim.keymap.set("n", "<leader>gg", function()
-  P(vim.b["stroiman-gotest"])
-  P(M)
-end)
-vim.keymap.set("n", "<leader>gd", function()
-  local dir = M.dirs[get_buf_dir(0)]
-  P(dir)
-  P(M.packages[dir.package].dependees)
-end)
 
 return M
