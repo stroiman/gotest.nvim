@@ -1,10 +1,14 @@
 # gotest.nvim - immediate test feedback in neovim
 
+Automatically run unit test, and get visible feedback in neovim when you save a
+file.
+
 > [!WARNING]
 > This plugin is a VERY EARLY prototype. But it works.
 
 Whenever you save a `*.go` file, the plugin executes `go test ./... -vet=off` in
-the current working directory, and notifies of the outcome. 
+the current working directory, and notifies of the outcome. This also sets the
+env var `GOEXPERIMENT=synctest` because I am currently experimenting with that.
 
 If the test result in an error, which can also be due to build errors, a new
 window opens (split right, width 80 cols), displaying both stderr and stdout of
@@ -13,17 +17,20 @@ the test run.
 <img width="1728" alt="Test feedback" src="https://github.com/user-attachments/assets/c24efa46-4ee4-46be-8583-63f782616453" />
 
 Pressing `<cr>` when the cursor is on a line with a filename and path will open
-the file in the _previous window_, and move the cursor to the indicated
-position.
+the file and move the cursor to the indicated position in the _previous window_.
+This works for:
 
-This behaviour works for build errors, and panic stack traces. Test errors
-reported by `t.Error()` and friends don't _yet_ work, as the line doesn't have a
-path. This [_will come_](#navigating-to-test-errors)
+- Build errors
+- Panic stack traces
+
+Test errors reported by `t.Error()` and friends doesn't contain a path, so that
+doesn't work yet. This [_will come_](#navigating-to-test-errors)
 
 `-vet=off` is a personal preference as the goal is the fastest possible
 feedback during normal development; and let the build servers handle thorough
 code analysis.
 
+Everything will of course eventually be customizable through options.
 
 ## Getting started.
 
@@ -33,6 +40,19 @@ Install the plugin using your favourite plugin manager.
 require("gotest")
 ```
 
+## Future features
+
+Cusomize which tests to run, e.g. whether to only run tests in the updated
+package, or packages depending on in.
+
+Support other automatic tasks, e.g., trigger code generation, such as mock
+generators. 
+
+Codegen should also trigger running tests. This plugin reacts to neovim events,
+so files updated on the file systems will not rerun tests automatically.
+
+(Git plugin support too to rerun tests on branch checkout - but this is low
+priority)
 
 ## Why not neotest
 
