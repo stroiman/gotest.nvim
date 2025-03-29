@@ -48,16 +48,13 @@ package, or packages depending on in.
 Support other automatic tasks, e.g., trigger code generation, such as mock
 generators. 
 
-Codegen should also trigger running tests. This plugin reacts to neovim events,
+Codegen could also trigger running tests. This plugin reacts to neovim events,
 so files updated on the file systems will not rerun tests automatically.
-
-(Git plugin support too to rerun tests on branch checkout - but this is low
-priority)
 
 ## Why not neotest
 
 I tried neotest, using both golang plugins, `neotest-go` and `neotest-golang`.
-But neither worked satisfactory.
+But neither worked to my satisfaction.
 
 When starting a neotest watcher, tests did not always run on file save. And a
 test watcher that doesn't run reliably is useless.
