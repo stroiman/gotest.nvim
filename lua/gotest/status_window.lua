@@ -4,9 +4,9 @@ local create_win_config = function()
   local width = vim.o.columns
   return {
     relative = "editor",
-    height = 2,
-    row = 1,
-    col = width - 1,
+    height = 1,
+    row = 0,
+    col = width - 0,
     width = 16,
     anchor = "NE",
     focusable = false,
@@ -41,10 +41,7 @@ M.refresh = function()
   if not status then
     status = "?"
   end
-  local lines = { "Status: " .. status }
-  if status == "PASS" then
-    lines = { lines[1], "Count: " .. M.successes }
-  end
+  local lines = { " Tests: " .. status }
   vim.api.nvim_buf_set_lines(M.status_buf, 0, -1, false, lines)
 end
 
