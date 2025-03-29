@@ -68,6 +68,7 @@ vim.api.nvim_create_autocmd("BufWritePost", {
     vim.cmd([[messages clear]])
     status_window.set_status("RUNNING")
     vim.fn.jobstart({ "go", "test", "./...", "-vet=off" }, {
+      env = { GOEXPERIMENT = "synctest" },
       stdout_buffered = true, -- One output line at a time
       on_stdout = function(_, data)
         for _, line in ipairs(data) do
