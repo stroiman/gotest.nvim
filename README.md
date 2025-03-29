@@ -10,6 +10,8 @@ If the test result in an error, which can also be due to build errors, a new
 window opens (split right, width 80 cols), displaying both stderr and stdout of
 the test run.
 
+<img width="1728" alt="Test feedback" src="https://github.com/user-attachments/assets/c24efa46-4ee4-46be-8583-63f782616453" />
+
 Pressing `<cr>` when the cursor is on a line with a filename and path will open
 the file in the _previous window_, and move the cursor to the indicated
 position.
