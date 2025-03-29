@@ -66,6 +66,7 @@ vim.api.nvim_create_autocmd("BufWritePost", {
     local output = {}
     local errors = {}
     vim.cmd([[messages clear]])
+    status_window.set_status("RUNNING")
     vim.fn.jobstart({ "go", "test", "./...", "-vet=off" }, {
       stdout_buffered = true, -- One output line at a time
       on_stdout = function(_, data)
@@ -82,12 +83,12 @@ vim.api.nvim_create_autocmd("BufWritePost", {
       end,
       on_exit = function(job_id, exit_code)
         status_window.open_window()
-        local success = exit_code == 0
-        status_window.set_success(success)
         M.store_test_result(output, errors)
-        if success then
+        if exit_code == 0 then
+          status_window.set_status("PASS")
           M.hide_output()
         else
+          status_window.set_status("FAIL")
           M.show_output()
         end
       end,
