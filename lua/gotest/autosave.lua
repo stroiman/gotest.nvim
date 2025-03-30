@@ -10,11 +10,9 @@ local function find_test_line(bufnr, entry)
   local test = parts[#parts]
   -- local pattern = string.format("func.*\\W%s\\W", test)
   local r = vim.regex(test)
-  P({ msg = "Find line", test = test })
 
   for i, l in ipairs(lines) do
     if r:match_str(l) then
-      P({ Linenr = i })
       return i
     end
   end

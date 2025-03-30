@@ -24,7 +24,6 @@ local init_buffer = function(buffer)
   vim.keymap.set("n", "<cr>", function()
     local line = vim.api.nvim_get_current_line()
     local pos = f.extract_position_from_line(line)
-    P({ Line = line, Pos = pos })
     if pos then
       vim.cmd("wincmd p")
       vim.cmd.e(pos.filename)
