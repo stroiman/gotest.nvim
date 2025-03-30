@@ -4,7 +4,7 @@ Automatically run unit test, and get visible feedback in neovim when you save a
 file.
 
 > [!WARNING]
-> This plugin is a VERY EARLY prototype. But it works.
+> This plugin is a VERY EARLY prototype. But it works... Sometimes ...
 
 Whenever you save a `*.go` file, the plugin executes `go test ./... -vet=off` in
 the current working directory, and notifies of the outcome. This also sets the
@@ -65,7 +65,8 @@ This plugin _always_ runs on file save, and _should_ always provide feedback.
 
 This is extremely early, so there are bound to be issues.
 
-- No tests run if current working directory out of sync
+- The wrong set of tests are executed run if current working directory gets out
+  of sync.
 
 More will probably be discovered.
 
