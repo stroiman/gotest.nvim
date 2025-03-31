@@ -1,5 +1,5 @@
+local autogroup = require("gotest.autogroup").group
 vim.api.nvim_create_augroup("stroiman_go_autorun", { clear = true })
-local grp = vim.api.nvim_create_augroup("stroiman-go-autorun", { clear = true })
 
 local ns = vim.api.nvim_create_namespace("stroiman-go-autotest")
 
@@ -46,7 +46,7 @@ end
 
 local attach_to_buffer = function(bufnr, command)
   vim.api.nvim_create_autocmd("BufWritePost", {
-    group = grp,
+    group = autogroup,
     pattern = "*.go",
     callback = function()
       vim.cmd([[messages clear]])

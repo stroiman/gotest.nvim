@@ -1,3 +1,5 @@
+local autogroup = require("gotest.autogroup").group
+
 local M = {
   dirs = {},
   packages = {},
@@ -136,10 +138,8 @@ M.process_buf_dependencies = function(self, buffer)
   })
 end
 
-local augrp = vim.api.nvim_create_augroup("stroiman-gotest", { clear = true })
-
 vim.api.nvim_create_autocmd({ "BufReadPre" }, {
-  group = augrp,
+  group = autogroup,
   pattern = "*.go",
   callback = function(event)
     local buf = event.buf

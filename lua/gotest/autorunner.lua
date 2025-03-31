@@ -1,4 +1,5 @@
 local status_window = require("gotest.status_window")
+local autogroup = require("gotest.autogroup").group
 local f = require("gotest.functions")
 
 M = {}
@@ -49,17 +50,15 @@ M.store_test_result = function(data, errors)
   vim.api.nvim_buf_set_lines(M.buffer, -1, -1, false, data)
 end
 
-local grp = vim.api.nvim_create_augroup("stroiman-go-autorun-2", { clear = true })
-
 vim.api.nvim_create_autocmd("VimResized", {
-  group = grp,
+  group = autogroup,
   callback = function()
     status_window.realign()
   end,
 })
 
 vim.api.nvim_create_autocmd("BufWritePost", {
-  group = grp,
+  group = autogroup,
   pattern = "*.go",
   callback = function()
     local output = {}
