@@ -67,6 +67,9 @@ This is extremely early, so there are bound to be issues.
 
 - The wrong set of tests are executed run if current working directory gets out
   of sync.
+- From time to time, pressing `<cr>` in the error window doesn't navigate to the
+  source code, requiring a restart of neovim (I have a possible fix to test next
+  time it ends up in this state)
 
 More will probably be discovered.
 
