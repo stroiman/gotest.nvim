@@ -70,6 +70,8 @@ This is extremely early, so there are bound to be issues.
 - From time to time, pressing `<cr>` in the error window doesn't navigate to the
   source code, requiring a restart of neovim (I have a possible fix to test next
   time it ends up in this state)
+- From time to time, neovim freezes, e.g., when opening source files for std,
+  and the module analyzer is enabled (disabled by default).
 
 More will probably be discovered.
 
