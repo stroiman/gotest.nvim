@@ -1,10 +1,23 @@
 local autogroup = require("gotest.autogroup")
 local autorunner = require("gotest.autorunner")
+local analyzer = require("gotest.analyzer")
+local status_window = require("gotest.status_window")
 
 local M = {}
 
 --- Configures gotest. Currently doesn't actually do anything
-M.setup = function() end
+M.setup = function(opts)
+  print("Setup gotest")
+  -- local default_options = {
+  --   analyzer = {
+  --     enabled = false,
+  --   },
+  -- }
+  -- if opts.analyzer and opts.analyzer.enabled then
+  --   analyzer.setup()
+  -- end
+  autorunner.setup()
+end
 
 --- Cleans up resources, e.g., removes autocommands.
 -- This function primarily serves a purpose for it's own development, to allow
@@ -13,6 +26,9 @@ M.setup = function() end
 -- customization.
 M.unload = function()
   autogroup.unload()
+  status_window.unload()
+  autorunner.unload()
+  analyzer.unload()
 end
 
 return M

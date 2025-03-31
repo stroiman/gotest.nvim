@@ -77,6 +77,8 @@ M.close_win = function()
   M.status_buf = nil
 end
 
+M.unload = M.close_win
+
 -- M.open_window()
 -- vim.keymap.set("n", "<leader>xs", function()
 --   M.set_success(true)

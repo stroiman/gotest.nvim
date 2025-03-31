@@ -13,6 +13,7 @@ M.get_group = function()
 end
 
 M.unload = function()
+  print("Unloading autogroup")
   M.group = create_group()
 end
 

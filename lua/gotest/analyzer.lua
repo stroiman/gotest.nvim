@@ -1,11 +1,12 @@
 local autogroup = require("gotest.autogroup").group
 
-local M = {
+local cache = {
   dirs = {},
   packages = {},
   modules = {},
 }
-M.setup = function(self) end
+
+local M = {}
 
 --- Generate diagnostics messages for a file
 --- @param path string: The full file path
@@ -32,7 +33,7 @@ local process_module_package = function(dir, package)
   if package == "" then
     return
   end
-  local pkg = ensure_key(M.packages, package)
+  local pkg = ensure_key(cache.packages, package)
   vim.fn.jobstart({ "go", "list", "-json", package }, {
     cwd = dir,
     stdout_buffered = true,
@@ -43,7 +44,7 @@ local process_module_package = function(dir, package)
       data = table.concat(data, "\n")
 
       local parsed = vim.json.decode(data)
-      local dirObj = ensure_key(M.dirs, parsed.Dir)
+      local dirObj = ensure_key(cache.dirs, parsed.Dir)
       dirObj.package = package
 
       pkg.module = parsed.Module.Path
@@ -55,7 +56,7 @@ local process_module_package = function(dir, package)
       end
       if parsed.Deps then
         for _, dep in ipairs(parsed.Deps) do
-          local depPkg = ensure_key(M.packages, dep)
+          local depPkg = ensure_key(cache.packages, dep)
           local dependees = ensure_key(depPkg, "dependees")
           dependees[package] = true
         end
@@ -91,7 +92,7 @@ local init_module = function(dir)
     on_stdout = function(_, data)
       if data then
         local parsed = vim.json.decode(table.concat(data, "\n"))
-        local module = ensure_key(M.modules, parsed.Path)
+        local module = ensure_key(cache.modules, parsed.Path)
         module.dir = parsed.Dir
         module.main = parsed.Main
         process_module_packages(module.dir)
@@ -102,9 +103,9 @@ end
 
 --- Processes the current buffer for it's package dependencies
 --- @param buffer integer: Buffer handle
-M.process_buf_dependencies = function(self, buffer)
+local process_buf_dependencies = function(buffer)
   local dir = get_buf_dir(buffer)
-  if not M.dirs[dir] then
+  if not cache.dirs[dir] then
     init_module(dir)
     return
   end
@@ -118,8 +119,8 @@ M.process_buf_dependencies = function(self, buffer)
       data = table.concat(data, "\n")
       local parsed = vim.json.decode(data)
       local package = parsed.ImportPath
-      ensure_key(self.dirs, dir).package = package
-      local pkg = ensure_key(self.packages, package)
+      ensure_key(cache.dirs, dir).package = package
+      local pkg = ensure_key(cache.packages, package)
       pkg.dir = dir
       pkg.deps = parsed.Deps
     end,
@@ -138,13 +139,17 @@ M.process_buf_dependencies = function(self, buffer)
   })
 end
 
-vim.api.nvim_create_autocmd({ "BufReadPre" }, {
-  group = autogroup,
-  pattern = "*.go",
-  callback = function(event)
-    local buf = event.buf
-    M:process_buf_dependencies(buf)
-  end,
-})
+M.setup = function()
+  vim.api.nvim_create_autocmd({ "BufReadPre" }, {
+    group = autogroup,
+    pattern = "*.go",
+    callback = function(event)
+      local buf = event.buf
+      process_buf_dependencies(buf)
+    end,
+  })
+end
+
+M.unload = function() end
 
 return M

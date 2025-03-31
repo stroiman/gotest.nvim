@@ -4,6 +4,12 @@ local f = require("gotest.functions")
 
 M = {}
 
+M.del_buffer = function()
+  if M.buffer and vim.api.nvim_buf_is_valid(M.buffer) then
+    vim.api.nvim_buf_delete(M.buffer, { force = true })
+  end
+end
+
 M.hide_output = function()
   if M.win and vim.api.nvim_win_is_valid(M.win) then
     vim.api.nvim_win_close(M.win, true)
@@ -50,50 +56,60 @@ M.store_test_result = function(data, errors)
   vim.api.nvim_buf_set_lines(M.buffer, -1, -1, false, data)
 end
 
-vim.api.nvim_create_autocmd("VimResized", {
-  group = autogroup,
-  callback = function()
-    status_window.realign()
-  end,
-})
-
-vim.api.nvim_create_autocmd("BufWritePost", {
-  group = autogroup,
-  pattern = "*.go",
-  callback = function()
-    local output = {}
-    local errors = {}
-    vim.cmd([[messages clear]])
-    status_window.set_status("RUNNING")
-    vim.fn.jobstart({ "go", "test", "./...", "-vet=off" }, {
-      env = { GOEXPERIMENT = "synctest" },
-      stdout_buffered = true, -- One output line at a time
-      on_stdout = function(_, data)
-        for _, line in ipairs(data) do
-          if string.find(line, "ok") ~= 1 and string.find(line, "?") ~= 1 then
-            table.insert(output, line)
-          end
-        end
-      end,
-      on_stderr = function(_, data)
-        for _, line in ipairs(data) do
-          table.insert(errors, line)
-        end
-      end,
-      on_exit = function(job_id, exit_code)
-        status_window.open_window()
-        M.store_test_result(output, errors)
-        if exit_code == 0 then
-          status_window.set_status("PASS")
-          M.hide_output()
-        else
-          status_window.set_status("FAIL")
-          M.show_output()
-        end
-      end,
-    })
-  end,
-})
 vim.keymap.set("n", "<leader>xx", function()
   status_window.close_win()
 end)
+
+M.setup = function()
+  vim.api.nvim_create_autocmd("VimResized", {
+    group = autogroup,
+    callback = function()
+      status_window.realign()
+    end,
+  })
+
+  vim.api.nvim_create_autocmd("BufWritePost", {
+    group = autogroup,
+    pattern = "*.go",
+    callback = function()
+      local output = {}
+      local errors = {}
+      vim.cmd([[messages clear]])
+      status_window.set_status("RUNNING")
+      vim.fn.jobstart({ "go", "test", "./...", "-vet=off" }, {
+        env = { GOEXPERIMENT = "synctest" },
+        stdout_buffered = true, -- One output line at a time
+        on_stdout = function(_, data)
+          for _, line in ipairs(data) do
+            if string.find(line, "ok") ~= 1 and string.find(line, "?") ~= 1 then
+              table.insert(output, line)
+            end
+          end
+        end,
+        on_stderr = function(_, data)
+          for _, line in ipairs(data) do
+            table.insert(errors, line)
+          end
+        end,
+        on_exit = function(job_id, exit_code)
+          status_window.open_window()
+          M.store_test_result(output, errors)
+          if exit_code == 0 then
+            status_window.set_status("PASS")
+            M.hide_output()
+          else
+            status_window.set_status("FAIL")
+            M.show_output()
+          end
+        end,
+      })
+    end,
+  })
+end
+
+M.unload = function()
+  M.hide_output()
+  M.del_buffer()
+end
+
+return M
