@@ -16,17 +16,6 @@ M.hide_output = function()
   end
 end
 
-M.show_output = function()
-  if M.win and vim.api.nvim_win_is_valid(M.win) then
-    return
-  end
-  M.win = vim.api.nvim_open_win(M.buffer, false, {
-    split = "right",
-    width = 80,
-  })
-  vim.wo[M.win].wrap = false
-end
-
 local init_buffer = function(buffer)
   vim.keymap.set("n", "<cr>", function()
     local line = vim.api.nvim_get_current_line()
@@ -42,10 +31,21 @@ local init_buffer = function(buffer)
   end, { buffer = buffer })
 end
 
+M.show_output = function()
+  if M.win and vim.api.nvim_win_is_valid(M.win) then
+    return
+  end
+  init_buffer(M.buffer)
+  M.win = vim.api.nvim_open_win(M.buffer, false, {
+    split = "right",
+    width = 80,
+  })
+  vim.wo[M.win].wrap = false
+end
+
 M.store_test_result = function(data, errors)
   if not M.buffer then
     M.buffer = vim.api.nvim_create_buf(false, true)
-    init_buffer(M.buffer)
   end
   vim.api.nvim_buf_set_lines(M.buffer, 0, -1, false, {})
   if #errors > 1 then

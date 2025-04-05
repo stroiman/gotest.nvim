@@ -68,13 +68,12 @@ end
 
 -- Close the status window. Ignored if the window is not open
 M.close_win = function()
-  if not M.win then
-    return
+  if M.win and vim.api.nvim_win_is_valid(M.win) then
+    vim.api.nvim_win_close(M.win, true)
+    vim.api.nvim_buf_delete(M.status_buf, { force = true })
+    M.win = nil
+    M.status_buf = nil
   end
-  vim.api.nvim_win_close(M.win, true)
-  vim.api.nvim_buf_delete(M.status_buf, { force = true })
-  M.win = nil
-  M.status_buf = nil
 end
 
 M.unload = M.close_win
