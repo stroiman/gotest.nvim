@@ -45,8 +45,11 @@ end
 
 M.store_test_result = function(data, errors)
   if not M.buffer then
-    M.buffer = vim.api.nvim_create_buf(false, true)
+    M.buffer = vim.api.nvim_create_buf(false, false)
+    vim.api.nvim_set_option_value("buftype", "nofile", { buf = M.buffer })
   end
+
+  vim.api.nvim_set_option_value("modifiable", true, { buf = M.buffer })
   vim.api.nvim_buf_set_lines(M.buffer, 0, -1, false, {})
   if #errors > 1 then
     vim.api.nvim_buf_set_lines(M.buffer, -1, -1, false, { "Stderr:", "" })
@@ -54,6 +57,7 @@ M.store_test_result = function(data, errors)
     vim.api.nvim_buf_set_lines(M.buffer, -1, -1, false, { "", "---", "Stdout:", "" })
   end
   vim.api.nvim_buf_set_lines(M.buffer, -1, -1, false, data)
+  vim.api.nvim_set_option_value("modifiable", false, { buf = M.buffer })
 end
 
 vim.keymap.set("n", "<leader>xx", function()
