@@ -1,5 +1,5 @@
 local status_window = require("gotest.status_window")
-local autogroup = require("gotest.autogroup").group
+local autogroup = require("gotest.autogroup")
 local f = require("gotest.functions")
 
 M = {}
@@ -62,21 +62,21 @@ end)
 
 M.setup = function()
   vim.api.nvim_create_autocmd("VimResized", {
-    group = autogroup,
+    group = autogroup.group,
     callback = function()
       status_window.realign()
     end,
   })
 
   vim.api.nvim_create_autocmd("BufWritePost", {
-    group = autogroup,
+    group = autogroup.group,
     pattern = "*.go",
     callback = function()
       local output = {}
       local errors = {}
       vim.cmd([[messages clear]])
       status_window.set_status("RUNNING")
-      vim.fn.jobstart({ "go", "test", "./...", "-vet=off" }, {
+      vim.fn.jobstart({ "go", "test", "./...", "-test.short", "-vet=off" }, {
         env = { GOEXPERIMENT = "synctest" },
         stdout_buffered = true, -- One output line at a time
         on_stdout = function(_, data)
@@ -110,6 +110,7 @@ end
 M.unload = function()
   M.hide_output()
   M.del_buffer()
+  autogroup.unload()
 end
 
 return M

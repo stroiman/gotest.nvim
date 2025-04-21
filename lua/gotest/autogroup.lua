@@ -12,8 +12,8 @@ M.get_group = function()
   return M.group
 end
 
+--- "Unload" all autocommands by recreating the autogroup
 M.unload = function()
-  print("Unloading autogroup")
   M.group = create_group()
 end
 

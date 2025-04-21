@@ -7,7 +7,6 @@ local M = {}
 
 --- Configures gotest. Currently doesn't actually do anything
 M.setup = function(opts)
-  print("Setup gotest")
   -- local default_options = {
   --   analyzer = {
   --     enabled = false,
@@ -18,6 +17,8 @@ M.setup = function(opts)
   -- end
   autorunner.setup()
 end
+
+M.start = function() end
 
 --- Cleans up resources, e.g., removes autocommands.
 -- This function primarily serves a purpose for it's own development, to allow
@@ -30,5 +31,13 @@ M.unload = function()
   autorunner.unload()
   analyzer.unload()
 end
+
+vim.api.nvim_create_user_command("GotestStart", function()
+  M.start()
+end, {})
+
+vim.api.nvim_create_user_command("GotestStop", function()
+  M.unload()
+end, {})
 
 return M
