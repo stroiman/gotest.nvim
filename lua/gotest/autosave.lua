@@ -1,10 +1,10 @@
-local autogroup = require("gotest.autogroup").group
-vim.api.nvim_create_augroup("stroiman_go_autorun", { clear = true })
+local augroup = require("gotest.autogroup")
+
+local M = {}
 
 local ns = vim.api.nvim_create_namespace("stroiman-go-autotest")
 
 local function find_test_line(bufnr, entry)
-  P("Find line")
   local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
   local parts = vim.split(entry.Test, "/")
   local test = parts[#parts]
@@ -16,7 +16,6 @@ local function find_test_line(bufnr, entry)
       return i
     end
   end
-  P("Line not found")
 end
 
 local function make_key(entry)
@@ -35,18 +34,13 @@ local function add_golang_test(state, entry)
   state.test = test
 end
 
-local function add_golang_output(state, entry)
-  assert(state.tests, vim.inspect(state))
-  table.insert(state.tests[make_key(entry)].output, vim.trim(entry.Output))
-end
-
 local function mark_succss(state, entry)
   state.tests[make_key(entry)].success = entry.Action == "pass"
 end
 
 local attach_to_buffer = function(bufnr, command)
   vim.api.nvim_create_autocmd("BufWritePost", {
-    group = autogroup,
+    group = augroup,
     pattern = "*.go",
     callback = function()
       vim.cmd([[messages clear]])
@@ -68,9 +62,7 @@ local attach_to_buffer = function(bufnr, command)
             return
           end
           if decoded.Action == "run" then
-            P("Run")
             add_golang_test(state, decoded)
-            P(state.test)
           elseif decoded.Action == "output" then
             -- if not decoded.Test then
             --   return
@@ -80,11 +72,6 @@ local attach_to_buffer = function(bufnr, command)
             if decoded.Test then
               mark_succss(state, decoded)
               local test = state.test
-              P({
-                Msg = "Print?",
-                Test = test,
-                Buf = bufnr,
-              })
               if test.success then
                 local text = { "✓" }
                 line = test.line
@@ -146,3 +133,7 @@ vim.api.nvim_create_user_command("Got", function()
   local bufnr = vim.api.nvim_get_current_buf()
   attach_to_buffer(bufnr, { "go", "test", "./...", "-json", "-vet=off" })
 end, {})
+
+M.unload = function() end
+
+return M

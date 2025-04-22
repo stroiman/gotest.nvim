@@ -9,8 +9,6 @@ local test_extract_filename = function()
   print("Filename: ", filename)
   print("Line: ", line)
   print("Col: ", col)
-
-  P(f.extract_position_from_line(bad))
 end
 
 test_extract_filename()

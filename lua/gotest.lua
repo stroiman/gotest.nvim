@@ -1,12 +1,14 @@
 --- Gotest module
 -- @module M
 
-local autogroup = require("gotest.autogroup")
+local augroup = require("gotest.autogroup")
+vim.api.nvim_create_augroup(augroup, { clear = true })
+
 local autorunner = require("gotest.autorunner")
 local analyzer = require("gotest.analyzer")
 local status_window = require("gotest.status_window")
 local output_window = require("gotest.output_window")
-
+---
 --- @class GoTestSettings
 local DEFAULT_SETTINGS = {
   output_window = output_window.DEFAULT_SETTINGS,
@@ -45,7 +47,6 @@ M.start = function() end
 -- it useful too in the current state of the plugin that doesn't allow for _any_
 -- customization.
 M.unload = function()
-  autogroup.unload()
   status_window.unload()
   autorunner.unload()
   analyzer.unload()

@@ -1,7 +1,7 @@
 local status_window = require("gotest.status_window")
-local autogroup = require("gotest.autogroup")
 local f = require("gotest.functions")
 local output_window = require("gotest.output_window")
+local augroup = require("gotest.autogroup")
 
 local M = {}
 
@@ -52,14 +52,14 @@ end)
 
 M.setup = function()
   vim.api.nvim_create_autocmd("VimResized", {
-    group = autogroup.group,
+    group = augroup,
     callback = function()
       status_window.realign()
     end,
   })
 
   vim.api.nvim_create_autocmd("BufWritePost", {
-    group = autogroup.group_name,
+    group = augroup,
     pattern = "*.go",
     callback = function()
       local errors = {}

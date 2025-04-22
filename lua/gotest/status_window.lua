@@ -76,7 +76,9 @@ M.close_win = function()
   end
 end
 
-M.unload = M.close_win
+M.unload = function()
+  M.close_win()
+end
 
 -- M.open_window()
 -- vim.keymap.set("n", "<leader>xs", function()

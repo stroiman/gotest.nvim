@@ -1,4 +1,4 @@
-local autogroup = require("gotest.autogroup").group
+local augroup = require("gotest.autogroup")
 
 local cache = {
   dirs = {},
@@ -73,7 +73,6 @@ local process_module_packages = function(dir)
     cwd = dir,
     stdout_buffered = true,
     on_stdout = function(_, data)
-      P(data)
       if data then
         for _, package in ipairs(data) do
           process_module_package(dir, package)
@@ -141,7 +140,7 @@ end
 
 M.setup = function()
   vim.api.nvim_create_autocmd({ "BufReadPre" }, {
-    group = autogroup,
+    group = augroup,
     pattern = "*.go",
     callback = function(event)
       local buf = event.buf

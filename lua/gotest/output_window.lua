@@ -1,4 +1,6 @@
-local autogroup = require("gotest.autogroup")
+local augroup = require("gotest.autogroup")
+
+P("Configuring")
 
 --- @class GoTestOutputWindowSettings
 --- @field show? "auto" | "off" | "on"
@@ -14,7 +16,7 @@ M.DEFAULT_SETTINGS = {
 local settings = {}
 
 vim.api.nvim_create_autocmd("User", {
-  group = autogroup.group_name,
+  group = augroup,
   pattern = { "GoTestDone", "GoTestStart" },
   callback = function(ev)
     local data = ev.data
