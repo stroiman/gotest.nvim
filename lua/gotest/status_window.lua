@@ -45,6 +45,7 @@ M.refresh = function()
   vim.api.nvim_buf_set_lines(M.status_buf, 0, -1, false, lines)
 end
 
+--- @param status "PASS" | "FAIL"
 M.set_status = function(status)
   M.status = status
   if M.status == "PASS" then

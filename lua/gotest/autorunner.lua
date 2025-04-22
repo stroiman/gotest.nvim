@@ -75,6 +75,7 @@ M.setup = function()
       status_window.set_status("RUNNING")
       local std_out_buffer = ""
       local std_err_buffer = ""
+      status_window.open_window()
       vim.system({ "go", "test", "./...", "-test.short", "-vet=off" }, {
         env = { GOEXPERIMENT = "synctest" },
         text = true,
@@ -108,20 +109,22 @@ M.setup = function()
         end,
       }, function(out)
         local exit_code = out.code
-        if #errors > 0 then
-          vim.schedule(function()
+        local success = exit_code == 0
+        vim.schedule(function()
+          status_window.open_window()
+          status_window.set_success(success)
+          if #errors > 0 then
             vim.api.nvim_buf_set_lines(M.buffer, 0, 0, false, errors)
-            status_window.open_window()
-            vim.api.nvim_exec_autocmds("user", {
-              pattern = "GoTestDone",
-              data = {
-                type = "done",
-                exit_code = exit_code,
-                success = exit_code == 0,
-              },
-            })
-          end)
-        end
+          end
+          vim.api.nvim_exec_autocmds("user", {
+            pattern = "GoTestDone",
+            data = {
+              type = "done",
+              exit_code = exit_code,
+              success = success,
+            },
+          })
+        end)
       end)
     end,
   })
