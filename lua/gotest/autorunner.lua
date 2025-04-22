@@ -1,14 +1,9 @@
 local status_window = require("gotest.status_window")
 local autogroup = require("gotest.autogroup")
 local f = require("gotest.functions")
+local output_window = require("gotest.output_window")
 
 local M = {}
-
-local create_buffer = function()
-  local buf = vim.api.nvim_create_buf(false, false)
-  vim.api.nvim_set_option_value("buftype", "nofile", { buf = buf })
-  return buf
-end
 
 M.del_buffer = function()
   if M.buffer and vim.api.nvim_buf_is_valid(M.buffer) then
@@ -16,13 +11,14 @@ M.del_buffer = function()
   end
 end
 
-M.hide_output = function()
-  if M.win and vim.api.nvim_win_is_valid(M.win) then
-    vim.api.nvim_win_close(M.win, true)
+function M.create_buffer()
+  if M.buffer and vim.api.nvim_buf_is_valid(M.buffer) then
+    return
   end
-end
+  M.buffer = vim.api.nvim_create_buf(false, false)
+  vim.api.nvim_set_option_value("buftype", "nofile", { buf = M.buffer })
+  output_window.set_buf(M.buffer)
 
-local init_buffer = function(buffer)
   vim.keymap.set("n", "<cr>", function()
     local line = vim.api.nvim_get_current_line()
     local pos = f.extract_position_from_line(line)
@@ -32,41 +28,12 @@ local init_buffer = function(buffer)
       local lnum = pos.lnum or 1
       local col = pos.col or 1
       vim.fn.setpos(".", { 0, lnum, col, 0 })
-      -- vim.api.nvim_set_current_win
     end
-  end, { buffer = buffer })
+  end, { buffer = M.buffer })
 end
-
-M.show_output = function()
-  if M.win and vim.api.nvim_win_is_valid(M.win) then
-    return
-  end
-  init_buffer(M.buffer)
-  M.win = vim.api.nvim_open_win(M.buffer, false, {
-    split = "right",
-    width = 80,
-  })
-  vim.wo[M.win].wrap = false
-end
-
-vim.api.nvim_create_autocmd("User", {
-  pattern = "GoTestDone",
-  callback = function(ev)
-    local success = ev.data.success
-    if success then
-      status_window.set_status("PASS")
-      M.hide_output()
-    else
-      status_window.set_status("FAIL")
-      M.show_output()
-    end
-  end,
-})
 
 M.store_test_result = function(data, errors)
-  if not M.buffer then
-    M.buffer = create_buffer()
-  end
+  M.create_buffer()
 
   vim.api.nvim_set_option_value("modifiable", true, { buf = M.buffer })
   vim.api.nvim_buf_set_lines(M.buffer, 0, -1, false, {})
@@ -96,14 +63,15 @@ M.setup = function()
     pattern = "*.go",
     callback = function()
       local errors = {}
-      if not M.buffer then
-        M.buffer = create_buffer()
-      end
+      M.create_buffer()
       vim.api.nvim_set_option_value("modifiable", true, { buf = M.buffer })
       vim.api.nvim_buf_set_lines(M.buffer, 0, -1, false, {})
 
       vim.cmd([[messages clear]])
-      vim.api.nvim_exec_autocmds("user", { pattern = "GoTestStart" })
+      vim.api.nvim_exec_autocmds("User", {
+        pattern = "GoTestStart",
+        data = { type = "start" },
+      })
       status_window.set_status("RUNNING")
       local std_out_buffer = ""
       local std_err_buffer = ""
@@ -147,6 +115,7 @@ M.setup = function()
             vim.api.nvim_exec_autocmds("user", {
               pattern = "GoTestDone",
               data = {
+                type = "done",
                 exit_code = exit_code,
                 success = exit_code == 0,
               },
@@ -159,9 +128,7 @@ M.setup = function()
 end
 
 M.unload = function()
-  M.hide_output()
   M.del_buffer()
-  autogroup.unload()
 end
 
 return M

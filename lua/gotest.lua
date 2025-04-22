@@ -1,29 +1,29 @@
+--- Gotest module
+-- @module M
+
 local autogroup = require("gotest.autogroup")
 local autorunner = require("gotest.autorunner")
 local analyzer = require("gotest.analyzer")
 local status_window = require("gotest.status_window")
+local output_window = require("gotest.output_window")
+
+--- @class GoTestSettings
+local DEFAULT_SETTINGS = {
+  output_window = output_window.DEFAULT_SETTINGS,
+}
 
 local M = {}
 
---- @class GoTestStatusWindowSettings
---- @field show? "auto" | "off" | "on"
-
---- @class GoTestSettings
---- @field status_window? GoTestStatusWindowSettings
-
---- @type GoTestSettings
-local DEFAULT_SETTINGS = {
-  status_window = {
-    show = "auto",
-  },
-}
+--- Current configuration settings
+-- @type GoTestSettings
+local settings = {}
 
 --- Configures gotest.
---- @param opts GoTestSettings Module overrides
+--- @param opts? GoTestSettings Module overrides
 M.setup = function(opts)
-  M.current = DEFAULT_SETTINGS
+  settings = DEFAULT_SETTINGS
   if opts then
-    M.current = vim.tbl_deep_extend("force", M.current, opts)
+    settings = vim.tbl_deep_extend("force", settings, opts)
   end
   -- local default_options = {
   --   analyzer = {
@@ -34,6 +34,7 @@ M.setup = function(opts)
   --   analyzer.setup()
   -- end
   autorunner.setup()
+  output_window.setup(settings.output_window)
 end
 
 M.start = function() end
