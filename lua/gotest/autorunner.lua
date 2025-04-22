@@ -2,7 +2,7 @@ local status_window = require("gotest.status_window")
 local autogroup = require("gotest.autogroup")
 local f = require("gotest.functions")
 
-M = {}
+local M = {}
 
 local create_buffer = function()
   local buf = vim.api.nvim_create_buf(false, false)
