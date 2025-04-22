@@ -5,8 +5,26 @@ local status_window = require("gotest.status_window")
 
 local M = {}
 
---- Configures gotest. Currently doesn't actually do anything
+--- @class GoTestStatusWindowSettings
+--- @field show? "auto" | "off" | "on"
+
+--- @class GoTestSettings
+--- @field status_window? GoTestStatusWindowSettings
+
+--- @type GoTestSettings
+local DEFAULT_SETTINGS = {
+  status_window = {
+    show = "auto",
+  },
+}
+
+--- Configures gotest.
+--- @param opts GoTestSettings Module overrides
 M.setup = function(opts)
+  M.current = DEFAULT_SETTINGS
+  if opts then
+    M.current = vim.tbl_deep_extend("force", M.current, opts)
+  end
   -- local default_options = {
   --   analyzer = {
   --     enabled = false,
