@@ -76,7 +76,7 @@ M.setup = function()
     callback = function()
       local errors = {}
       M.create_buffer()
-      local instance = test_run.TestRun:new({ output_buf = M.buffer })
+      local instance = test_run.new_test_run({ output_buf = M.buffer })
       vim.api.nvim_set_option_value("modifiable", true, { buf = M.buffer })
       vim.api.nvim_buf_set_lines(M.buffer, 0, -1, false, {})
 

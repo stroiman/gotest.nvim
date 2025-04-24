@@ -26,6 +26,7 @@ local autorunner = require("gotest.autorunner")
 local analyzer = require("gotest.analyzer")
 local status_window = require("gotest.status_window")
 local output_window = require("gotest.output_window")
+local test_run = require("gotest.test_run")
 ---
 --- @class GoTestSettings
 local DEFAULT_SETTINGS = {
@@ -38,11 +39,17 @@ local DEFAULT_SETTINGS = {
 }
 
 local commands = {
-  start = function()
+  Start = function()
     M.start()
   end,
-  stop = function()
+  Stop = function()
     M.unload()
+  end,
+  OutputShow = function()
+    output_window.show_output()
+  end,
+  ShowLast = function()
+    test_run.debug_raw()
   end,
 }
 
@@ -70,7 +77,11 @@ M.setup = function(opts)
   output_window.setup(settings.output_window)
 
   vim.api.nvim_create_user_command(settings.user_command, function(args)
-    P(args)
+    P(args.args)
+    local command = commands[args.args]
+    if command then
+      command()
+    end
   end, {
     complete = function(args)
       local res = {}
@@ -93,6 +104,7 @@ M.start = function() end
 M.unload = function()
   P("Unload")
   if settings.user_command then
+    -- ignore error, command already deleted
     pcall(vim.api.nvim_del_user_command, settings.user_command)
   end
   status_window.unload()
@@ -104,6 +116,10 @@ if auto_setup then
   -- This is for the special case that this plugin file is executed straight
   -- from within neovim, to support a faster feedback cycle.
   M.setup(auto_setup)
+
+  -- Replace the setup function, so any code that has loaded the old version
+  -- will reference the new.
+  old_version.setup = M.setup
 end
 
 return M

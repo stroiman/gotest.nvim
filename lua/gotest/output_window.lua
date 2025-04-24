@@ -1,7 +1,5 @@
 local augroup = require("gotest.autogroup")
 
-P("Configuring")
-
 --- @class GoTestOutputWindowSettings
 --- @field show? "auto" | "off" | "on"
 --- @field win_config? vim.api.keyset.win_config
