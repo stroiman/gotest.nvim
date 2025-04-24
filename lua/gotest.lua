@@ -29,6 +29,7 @@ local output_window = require("gotest.output_window")
 local test_run = require("gotest.test_run")
 ---
 --- @class GoTestSettings
+--- @field aucommand_pattern string | string[]
 local DEFAULT_SETTINGS = {
   output_window = output_window.DEFAULT_SETTINGS,
   --- Name for a user command to create. Defaults to "Got", i.e., you can
@@ -73,7 +74,7 @@ M.setup = function(opts)
   -- if opts.analyzer and opts.analyzer.enabled then
   --   analyzer.setup()
   -- end
-  autorunner.setup()
+  autorunner.setup({ aucommand_pattern = settings.aucommand_pattern })
   output_window.setup(settings.output_window)
 
   vim.api.nvim_create_user_command(settings.user_command, function(args)

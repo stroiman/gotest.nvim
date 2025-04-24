@@ -62,7 +62,16 @@ local killCurrent = function()
   end
 end
 
-M.setup = function()
+--- @class AutoRunnerOptions
+--- @field aucommand_pattern? string | string[] Will be changed later to have module-specific config.
+
+--- @param opts? AutoRunnerOptions
+M.setup = function(opts)
+  --- @type string | string[]
+  local pattern = "*.go"
+  if opts and opts.aucommand_pattern then
+    pattern = opts.aucommand_pattern
+  end
   vim.api.nvim_create_autocmd("VimResized", {
     group = augroup,
     callback = function()
@@ -72,7 +81,7 @@ M.setup = function()
 
   vim.api.nvim_create_autocmd("BufWritePost", {
     group = augroup,
-    pattern = "*.go",
+    pattern = pattern,
     callback = function()
       local errors = {}
       M.create_buffer()
