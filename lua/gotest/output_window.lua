@@ -4,16 +4,23 @@ P("Configuring")
 
 --- @class GoTestOutputWindowSettings
 --- @field show? "auto" | "off" | "on"
+--- @field win_config? vim.api.keyset.win_config
 
 local M = {}
 
 --- @type GoTestOutputWindowSettings
 M.DEFAULT_SETTINGS = {
   show = "auto",
+  win_config = {
+    split = "right",
+    win = -1,
+    width = 80,
+  },
 }
 
 --- @type GoTestOutputWindowSettings
 local settings = {}
+local last_success = true
 
 vim.api.nvim_create_autocmd("User", {
   group = augroup,
@@ -27,9 +34,11 @@ vim.api.nvim_create_autocmd("User", {
       if data.type == "done" then
         if data.success then
           M.hide_output()
-        else
+        end
+        if last_success and not data.success then
           M.show_output()
         end
+        last_success = data.success
       end
     end
   end,
@@ -53,10 +62,7 @@ M.show_output = function()
   if M.win and vim.api.nvim_win_is_valid(M.win) then
     return
   end
-  M.win = vim.api.nvim_open_win(M.buf, false, {
-    split = "right",
-    width = 80,
-  })
+  M.win = vim.api.nvim_open_win(M.buf, false, settings.win_config)
   vim.wo[M.win].wrap = false
 end
 

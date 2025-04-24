@@ -2,6 +2,7 @@ local status_window = require("gotest.status_window")
 local f = require("gotest.functions")
 local output_window = require("gotest.output_window")
 local augroup = require("gotest.autogroup")
+local test_run = require("gotest.test_run")
 
 local M = {}
 
@@ -50,6 +51,17 @@ vim.keymap.set("n", "<leader>xx", function()
   status_window.close_win()
 end)
 
+--- @type vim.SystemObj | nil
+local currentProcess
+
+local killCurrent = function()
+  local tmp = currentProcess
+  if tmp then
+    currentProcess = nil
+    tmp:kill(15) -- 15 = TERM signal
+  end
+end
+
 M.setup = function()
   vim.api.nvim_create_autocmd("VimResized", {
     group = augroup,
@@ -64,10 +76,11 @@ M.setup = function()
     callback = function()
       local errors = {}
       M.create_buffer()
+      local instance = test_run.TestRun:new({ output_buf = M.buffer })
       vim.api.nvim_set_option_value("modifiable", true, { buf = M.buffer })
       vim.api.nvim_buf_set_lines(M.buffer, 0, -1, false, {})
 
-      vim.cmd([[messages clear]])
+      killCurrent()
       vim.api.nvim_exec_autocmds("User", {
         pattern = "GoTestStart",
         data = { type = "start" },
@@ -76,7 +89,7 @@ M.setup = function()
       local std_out_buffer = ""
       local std_err_buffer = ""
       status_window.open_window()
-      vim.system({ "go", "test", "./...", "-test.short", "-vet=off" }, {
+      currentProcess = vim.system({ "go", "test", "./...", "-test.short", "-vet=off" }, {
         env = { GOEXPERIMENT = "synctest" },
         text = true,
         stdout = function(err, chunk)
@@ -86,14 +99,10 @@ M.setup = function()
           local data = vim.split(chunk, "\n")
           data[1] = std_out_buffer .. data[1]
           std_out_buffer = table.remove(data)
-          local output = {}
-          for _, line in ipairs(data) do
-            if string.find(line, "ok") ~= 1 and string.find(line, "?") ~= 1 then
-              table.insert(output, line)
-            end
-          end
           vim.schedule(function()
-            vim.api.nvim_buf_set_lines(M.buffer, -1, -1, false, output)
+            for _, line in ipairs(data) do
+              instance:process_line(line)
+            end
           end)
         end,
         stderr = function(_, chunk)
@@ -108,6 +117,7 @@ M.setup = function()
           end
         end,
       }, function(out)
+        currentProcess = nil
         local exit_code = out.code
         local success = exit_code == 0
         vim.schedule(function()
