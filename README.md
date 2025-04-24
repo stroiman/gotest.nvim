@@ -34,7 +34,7 @@ These settings are hardcoded, but will of course be made customizable:
 
 ## Getting started.
 
-Install the plugin, `stroiman/gotest` using your favourite plugin manager. 
+Install the plugin, `stroiman/gotest.nvim` using your favourite plugin manager. 
 
 Call `setup` to get started.
 
@@ -67,7 +67,9 @@ To integrate test status with lualine, you need to do two things:
 
 #### Creating a lualing function
 
-You just need to have a function that returns a string.
+You just need to have a function that returns a string. `gotest.status()`
+returns either `"running"`, `"pass"`, or `"fail"`. Before any test has executed,
+it will return `nil`.
 
 ```lua
 local gotest = require("gotest")
@@ -93,7 +95,8 @@ lualine.setup({
 
 #### Refresh lualine on test results
 
-Gotest executes a few `User` auto commands when tests start/stop.
+Gotest executes a few `User` auto commands when tests start/stop. We can react
+to `"GoTestStart"` and `"GoTestDone"` to tell lualine to refresh.
 
 ```lua
 local grp = vim.api.nvim_create_augroup("gotest_lualine", { clear = true })
