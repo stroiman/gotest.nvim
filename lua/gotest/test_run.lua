@@ -76,7 +76,10 @@ end
 --- OutputBuffer controls a neovim buffer containing test output.
 --- @class OutputBuffer
 --- @field buf integer
-local OutputBuffer = {}
+--- @field non_empty boolean
+local OutputBuffer = {
+  non_empty = false,
+}
 
 --- @param buf integer Buffer number
 function OutputBuffer:new(buf)
@@ -88,6 +91,7 @@ end
 
 --- @param lines string[]
 function OutputBuffer:append(lines)
+  self.non_empty = true
   local buf = self.buf
   vim.api.nvim_set_option_value("modifiable", true, { buf = buf })
   vim.api.nvim_buf_set_lines(buf, -1, -1, false, lines)
@@ -152,10 +156,12 @@ function TestRun:process_line(line)
   local test = self:get_test(package_name, test_name)
   local res = test:process_json(data)
   if res then
+    if self.output.non_empty then
+      self.output:append({ "" }) -- Blank line to separate tests
+      self.output:append({ "   --- *** ---" }) -- Blank line to separate tests
+      self.output:append({ "" }) -- Blank line to separate tests
+    end
     self.output:append(res)
-    self.output:append({ "" }) -- Blank line to separate tests
-    self.output:append({ "   --- *** ---" }) -- Blank line to separate tests
-    self.output:append({ "" }) -- Blank line to separate tests
   end
 
   -- return
