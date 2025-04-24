@@ -44,8 +44,17 @@ end
 --- Process a single line of output from `go test`
 --- @param line string
 function TestRun:process_line(line)
-  if string.find(line, "ok") ~= 1 and string.find(line, "?") ~= 1 then
-    self.output:append(line)
+  local data = vim.json.decode(line)
+  local output = data.Output
+  if output then
+    local olines = vim.split(output, "\n")
+    for i, oline in ipairs(olines) do
+      if i < #oline or oline ~= "" then
+        if string.find(oline, "ok") ~= 1 and string.find(oline, "?") ~= 1 then
+          self.output:append(oline)
+        end
+      end
+    end
   end
 end
 

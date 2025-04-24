@@ -89,7 +89,7 @@ M.setup = function()
       local std_out_buffer = ""
       local std_err_buffer = ""
       status_window.open_window()
-      currentProcess = vim.system({ "go", "test", "./...", "-test.short", "-vet=off" }, {
+      currentProcess = vim.system({ "go", "test", "./...", "-test.short", "-json", "-vet=off" }, {
         env = { GOEXPERIMENT = "synctest" },
         text = true,
         stdout = function(err, chunk)
