@@ -123,4 +123,13 @@ if auto_setup then
   old_version.setup = M.setup
 end
 
+--- @return "pass" | "fail" | "running" | nil
+M.status = function()
+  local last_run = test_run.last_run
+  if not last_run then
+    return nil
+  end
+  return last_run.status
+end
+
 return M

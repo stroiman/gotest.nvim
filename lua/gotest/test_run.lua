@@ -99,10 +99,13 @@ end
 --- @field output OutputBuffer
 --- @field debug_raw_buf? integer A buffer containing the `raw go` test json
 --- @field result "pass" | "fail"
+--- @field status "running" | "pass" | "fail"
 local TestRun = {
   debug_raw = {},
   --- @type {[string]: Test}
   tests = {},
+  done = false,
+  status = "running",
 }
 
 --- @class TestRunOptions
@@ -181,6 +184,15 @@ function TestRun:debug_show_raw()
     win = -1,
     width = 80,
   })
+end
+
+--- @param success boolean
+function TestRun:set_success(success)
+  if success then
+    self.status = "pass"
+  else
+    self.status = "fail"
+  end
 end
 
 M.TestRun = TestRun

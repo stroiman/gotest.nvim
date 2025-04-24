@@ -1,4 +1,3 @@
-local status_window = require("gotest.status_window")
 local f = require("gotest.functions")
 local output_window = require("gotest.output_window")
 local augroup = require("gotest.autogroup")
@@ -47,10 +46,6 @@ M.store_test_result = function(data, errors)
   vim.api.nvim_set_option_value("modifiable", false, { buf = M.buffer })
 end
 
-vim.keymap.set("n", "<leader>xx", function()
-  status_window.close_win()
-end)
-
 --- @type vim.SystemObj | nil
 local currentProcess
 
@@ -72,12 +67,6 @@ M.setup = function(opts)
   if opts and opts.aucommand_pattern then
     pattern = opts.aucommand_pattern
   end
-  vim.api.nvim_create_autocmd("VimResized", {
-    group = augroup,
-    callback = function()
-      status_window.realign()
-    end,
-  })
 
   vim.api.nvim_create_autocmd("BufWritePost", {
     group = augroup,
@@ -94,10 +83,8 @@ M.setup = function(opts)
         pattern = "GoTestStart",
         data = { type = "start" },
       })
-      status_window.set_status("RUNNING")
       local std_out_buffer = ""
       local std_err_buffer = ""
-      status_window.open_window()
       currentProcess = vim.system({ "go", "test", "./...", "-test.short", "-json", "-vet=off" }, {
         env = { GOEXPERIMENT = "synctest" },
         text = true,
@@ -129,9 +116,8 @@ M.setup = function(opts)
         currentProcess = nil
         local exit_code = out.code
         local success = exit_code == 0
+        instance:set_success(success)
         vim.schedule(function()
-          status_window.open_window()
-          status_window.set_success(success)
           if #errors > 0 then
             vim.api.nvim_buf_set_lines(M.buffer, 0, 0, false, errors)
           end
