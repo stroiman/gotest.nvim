@@ -1,5 +1,23 @@
 --- Gotest module
 -- @module M
+--
+
+-- Unload existing code from cache. This is used when developing the modules, I
+-- can just resource this file, and it will stop the current plugin, reload new
+-- changed files, and rerun the setup function with the same configuration.
+local old_version = package.loaded["gotest"]
+local auto_setup = nil
+if old_version and type(old_version) == "table" then
+  auto_setup = old_version.settings
+  old_version.unload()
+  for name, _ in pairs(package.loaded) do
+    if name:match("^gotest.") then
+      package.loaded[name] = nil
+    end
+  end
+end
+
+local M = {}
 
 local augroup = require("gotest.autogroup")
 vim.api.nvim_create_augroup(augroup, { clear = true })
@@ -21,14 +39,12 @@ local DEFAULT_SETTINGS = {
 
 local commands = {
   start = function()
-    P("Start")
+    M.start()
   end,
   stop = function()
-    P("Stop")
+    M.unload()
   end,
 }
-
-local M = {}
 
 --- Current configuration settings
 --- @type GoTestSettings
@@ -41,6 +57,7 @@ M.setup = function(opts)
   if opts then
     settings = vim.tbl_deep_extend("force", settings, opts)
   end
+  M.settings = settings
   -- local default_options = {
   --   analyzer = {
   --     enabled = false,
@@ -74,6 +91,7 @@ M.start = function() end
 -- it useful too in the current state of the plugin that doesn't allow for _any_
 -- customization.
 M.unload = function()
+  P("Unload")
   if settings.user_command then
     pcall(vim.api.nvim_del_user_command, settings.user_command)
   end
@@ -82,12 +100,10 @@ M.unload = function()
   analyzer.unload()
 end
 
-vim.api.nvim_create_user_command("GotestStart", function()
-  M.start()
-end, {})
-
-vim.api.nvim_create_user_command("GotestStop", function()
-  M.unload()
-end, {})
+if auto_setup then
+  -- This is for the special case that this plugin file is executed straight
+  -- from within neovim, to support a faster feedback cycle.
+  M.setup(auto_setup)
+end
 
 return M
