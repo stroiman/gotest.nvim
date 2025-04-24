@@ -10,7 +10,9 @@ Get status in lualine (manual setup instructions included here)
 > backwards compatibility either.
 
 Whenever you save a `*.go` file, the plugin executes `go test` in the current
-working directory.
+working directory, showing any failed tests automatically.
+
+<img width="1895" alt="screenshot of a new window in neovim with test results showing, and lualine updated" src="https://github.com/user-attachments/assets/1d780d09-c735-4465-816a-1e7e69a75623" />
 
 Failed tests or compilations will open an window showing output. Pressing `<cr>`
 will quickly jump to the source code for
