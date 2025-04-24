@@ -42,7 +42,16 @@ end
 --- Process the JSON output returned by `go test -json`
 --- @return string[] | nil
 function Test:process_json(data)
+  if not self.output then
+    self.output = {}
+  end
   local action = data.Action
+  if action == "run" then
+    table.insert(self.output, "Pkg:  " .. self.id.package)
+    table.insert(self.output, "Test: " .. self.id.test_name)
+    table.insert(self.output, "")
+    return nil
+  end
   if action == "pass" then
     self.result = "pass"
     return nil
@@ -52,9 +61,6 @@ function Test:process_json(data)
     return self.output
   end
   if action == "output" then
-    if not self.output then
-      self.output = {}
-    end
     local lines = vim.split(data.Output, "\n")
     for i, line in ipairs(lines) do
       if i < #lines or line ~= "" then
@@ -144,6 +150,9 @@ function TestRun:process_line(line)
   local res = test:process_json(data)
   if res then
     self.output:append(res)
+    self.output:append({ "" }) -- Blank line to separate tests
+    self.output:append({ "   --- *** ---" }) -- Blank line to separate tests
+    self.output:append({ "" }) -- Blank line to separate tests
   end
 
   -- return
