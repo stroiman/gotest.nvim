@@ -72,9 +72,11 @@ M.setup = function(opts)
     group = augroup,
     pattern = pattern,
     callback = function()
+      --- @type string[]
       local errors = {}
       M.create_buffer()
-      local instance = test_run.new_test_run({ output_buf = M.buffer })
+      local output = test_run.OutputBuffer:new(M.buffer)
+      local instance = test_run.new_test_run({ output_buf = output })
       vim.api.nvim_set_option_value("modifiable", true, { buf = M.buffer })
       vim.api.nvim_buf_set_lines(M.buffer, 0, -1, false, {})
 
@@ -116,11 +118,8 @@ M.setup = function(opts)
         currentProcess = nil
         local exit_code = out.code
         local success = exit_code == 0
-        instance:set_success(success)
         vim.schedule(function()
-          if #errors > 0 then
-            vim.api.nvim_buf_set_lines(M.buffer, 0, 0, false, errors)
-          end
+          instance:set_success(success)
           vim.api.nvim_exec_autocmds("user", {
             pattern = "GoTestDone",
             data = {

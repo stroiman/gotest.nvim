@@ -86,7 +86,19 @@ function OutputBuffer:new(buf)
   local o = { buf = buf }
   setmetatable(o, self)
   self.__index = self
+  vim.api.nvim_set_option_value("modifiable", true, { buf = buf })
+  vim.api.nvim_buf_set_lines(buf, 0, -1, false, {})
+  vim.api.nvim_set_option_value("modifiable", false, { buf = buf })
   return o
+end
+
+--- @param lines string[]
+function OutputBuffer:prepend(lines)
+  self.non_empty = true
+  local buf = self.buf
+  vim.api.nvim_set_option_value("modifiable", true, { buf = buf })
+  vim.api.nvim_buf_set_lines(buf, 0, 0, false, lines)
+  vim.api.nvim_set_option_value("modifiable", false, { buf = buf })
 end
 
 --- @param lines string[]
@@ -101,26 +113,27 @@ end
 --- TestRun represents a single execution of `go test`
 --- @class TestRun
 --- @field output OutputBuffer
+--- @field build_output string[]
 --- @field debug_raw_buf? integer A buffer containing the `raw go` test json
 --- @field result "pass" | "fail"
 --- @field status "running" | "pass" | "fail"
-local TestRun = {
-  debug_raw = {},
-  --- @type {[string]: Test}
-  tests = {},
-  done = false,
-  status = "running",
-}
+--- @field tests {[string]: Test}
+local TestRun = {}
 
 --- @class TestRunOptions
---- @field output_buf integer
+--- @field output_buf OutputBuffer
 
 --- Create a new test run
 --- @param opt TestRunOptions
 --- @return TestRun
 function TestRun:new(opt)
   local o = {
-    output = OutputBuffer:new(opt.output_buf),
+    output = opt.output_buf,
+    debug_raw = {},
+    tests = {},
+    build_output = {},
+    done = false,
+    status = "running",
   }
   setmetatable(o, self)
   self.__index = self
@@ -151,15 +164,31 @@ function TestRun:process_line(line)
   local package_name = data.Package
   local test_name = data.Test
   if not package_name or not test_name then
+    local action = data.Action
+    if action == "build-output" then
+      if not self.build_output then
+        self.build_output = {}
+      end
+      local olines = vim.split(data.Output, "\n")
+      for i, oline in ipairs(olines) do
+        if i < #oline or oline ~= "" then
+          if string.find(oline, "ok") ~= 1 and string.find(oline, "?") ~= 1 then
+            table.insert(self.build_output, oline)
+          end
+        end
+      end
+    end
     return
   end
   local test = self:get_test(package_name, test_name)
   local res = test:process_json(data)
   if res then
     if self.output.non_empty then
-      self.output:append({ "" }) -- Blank line to separate tests
-      self.output:append({ "   --- *** ---" }) -- Blank line to separate tests
-      self.output:append({ "" }) -- Blank line to separate tests
+      self.output:append({
+        "",
+        "   --- *** ---",
+        "",
+      }) -- Blank line to separate tests
     end
     self.output:append(res)
   end
@@ -198,6 +227,10 @@ function TestRun:set_success(success)
     self.status = "pass"
   else
     self.status = "fail"
+    local o = self.build_output
+    if o and #o then
+      self.output:prepend(self.build_output)
+    end
   end
 end
 
