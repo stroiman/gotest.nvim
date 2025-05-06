@@ -78,7 +78,6 @@ M.setup = function(opts)
   output_window.setup(settings.output_window)
 
   vim.api.nvim_create_user_command(settings.user_command, function(args)
-    P(args.args)
     local command = commands[args.args]
     if command then
       command()
@@ -103,7 +102,6 @@ M.start = function() end
 -- it useful too in the current state of the plugin that doesn't allow for _any_
 -- customization.
 M.unload = function()
-  P("Unload")
   if settings.user_command then
     -- ignore error, command already deleted
     pcall(vim.api.nvim_del_user_command, settings.user_command)

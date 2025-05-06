@@ -93,7 +93,6 @@ vim.keymap.set("n", "<leader>xx", function()
   local r = vim.regex("func.*\\WTestValidLogin\\W")
   for i, l in ipairs(lines) do
     if r:match_str(l) then
-      -- P({ lineNo = i, line = l })
     end
   end
 end)
