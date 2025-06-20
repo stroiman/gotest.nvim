@@ -106,6 +106,7 @@ M.unload = function()
     -- ignore error, command already deleted
     pcall(vim.api.nvim_del_user_command, settings.user_command)
   end
+  vim.api.nvim_create_augroup(augroup, { clear = true })
   status_window.unload()
   autorunner.unload()
   analyzer.unload()
