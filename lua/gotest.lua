@@ -112,6 +112,8 @@ M.unload = function()
   analyzer.unload()
 end
 
+M.stop = M.unload
+
 if auto_setup then
   -- This is for the special case that this plugin file is executed straight
   -- from within neovim, to support a faster feedback cycle.
