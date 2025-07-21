@@ -27,6 +27,7 @@ end
 --- @field output string[]
 local Test = {}
 
+--- @param id TestID
 function Test:new(id)
   local o = { id = id }
   setmetatable(o, self)
@@ -73,6 +74,66 @@ function Test:process_json(data)
   return nil
 end
 
+--- @class GoPackage
+--- @field id string
+--- @field output string[]
+--- @field tests {[string]: Test}
+local GoPackage = {}
+
+function GoPackage:new(id)
+  local o = {
+    id = id,
+    tests = {},
+  }
+  setmetatable(o, self)
+  self.__index = self
+  return o
+end
+
+--- Finds the Test with the given name. If the test is not known, it is created.
+--- @param key string
+--- @return Test
+function GoPackage:get_test(key)
+  local result = self.tests[key]
+  if not result then
+    result = Test:new(TestID:new(self.id, key))
+    self.tests[key] = result
+  end
+  return result
+end
+
+--- Process the JSON output returned by `go test -json`
+--- @return string[] | nil
+function GoPackage:process_json(data)
+  if not self.output then
+    self.output = {}
+  end
+
+  local test_name = data.Test
+  if test_name then
+    local test = self:get_test(test_name)
+    local res = test:process_json(data)
+    if res then
+      for _, v in ipairs(res) do
+        table.insert(self.output, v)
+      end
+    end
+    return
+  else
+    if data.Output then
+      local olines = vim.split(data.Output, "\n")
+      for i, oline in ipairs(olines) do
+        if i < #oline or oline ~= "" then
+          table.insert(self.output, oline)
+        end
+      end
+    end
+  end
+  if data.Action == "fail" then
+    return self.output
+  end
+end
+
 --- OutputBuffer controls a neovim buffer containing test output.
 --- @class OutputBuffer
 --- @field buf integer
@@ -114,10 +175,12 @@ end
 --- @class TestRun
 --- @field output OutputBuffer
 --- @field build_output string[]
+--- @field debug_raw string[]
 --- @field debug_raw_buf? integer A buffer containing the `raw go` test json
 --- @field result "pass" | "fail"
 --- @field status "running" | "pass" | "fail"
 --- @field tests {[string]: Test}
+--- @field packages {[string]: GoPackage}
 local TestRun = {}
 
 --- @class TestRunOptions
@@ -131,6 +194,7 @@ function TestRun:new(opt)
     output = opt.output_buf,
     debug_raw = {},
     tests = {},
+    packages = {},
     build_output = {},
     done = false,
     status = "running",
@@ -138,6 +202,19 @@ function TestRun:new(opt)
   setmetatable(o, self)
   self.__index = self
   return o
+end
+
+--- Gets the package with the specified package path. If the path is not
+--- recognised, create a new instance.
+--- @param package string Package path
+--- @return GoPackage
+function TestRun:get_pkg(package)
+  local result = self.packages[package]
+  if not result then
+    result = GoPackage:new(package)
+    self.packages[package] = result
+  end
+  return result
 end
 
 --- Gets the test with specified name in specified package. If the name is not
@@ -160,6 +237,7 @@ end
 --- @param line string
 function TestRun:process_line(line)
   table.insert(self.debug_raw, line)
+  table.insert(self.debug_raw, "Thinking ...")
   local data = vim.json.decode(line)
   local package_name = data.Package
   local test_name = data.Test
@@ -178,19 +256,23 @@ function TestRun:process_line(line)
         end
       end
     end
-    return
+    -- return
   end
-  local test = self:get_test(package_name, test_name)
-  local res = test:process_json(data)
-  if res then
-    if self.output.non_empty then
-      self.output:append({
-        "",
-        "   --- *** ---",
-        "",
-      }) -- Blank line to separate tests
+  if package_name then
+    local pkg = self:get_pkg(package_name)
+    local res = pkg:process_json(data)
+    -- local test = self:get_test(package_name, test_name)
+    -- test:process_json(data)
+    if res then
+      if self.output.non_empty then
+        self.output:append({
+          "",
+          "   --- *** ---",
+          "",
+        }) -- Blank line to separate tests
+      end
+      self.output:append(res)
     end
-    self.output:append(res)
   end
 
   -- return
